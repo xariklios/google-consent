@@ -27,18 +27,6 @@ add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('my_css');
 });
 
-add_action('wp_head', 'gcm_load_consent_layer', 0);
-
-function gcm_load_consent_layer()
-{
-    echo "gtag('consent', 'default', {
-        'ad_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'analytics_storage': 'denied'
-      });";
-}
-
 add_action('wp_footer', 'gcm_banner');
 
 function gcm_banner()
