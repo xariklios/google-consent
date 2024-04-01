@@ -43,32 +43,44 @@ add_action('wp_footer', 'gcm_banner');
 
 function gcm_banner()
 {
+
+    if (!current_user_can("administrator")) return;
+    $showBanner = !isset($_COOKIE['gmc_user_consent']);
+
+    if (!$showBanner) return;
 ?>
 
-    <div id="cookie-banner" class="cookie-banner">
-        <p>We use cookies to enhance your experience. Please accept or decline the use of cookies.</p>
+    <div id="gmc_cookie_banner" class="cookie-banner">
+        <h3>Αυτή η ιστοσελίδα χρησιμοποιεί cookies</h3>
+        <p>Χρησιμοποιούμε cookies και άλλες τεχνολογίες εντοπισμού για την βελτίωση της εμπειρίας περιήγησης στην ιστοσελίδα μας, για την εξατομίκευση περιεχομένου και διαφημίσεων, την παροχή λειτουργιών κοινωνικών μέσων και την ανάλυση της επισκεψιμότητάς μας.</p>
         <div class="buttons">
-            <button id="accept-btn">Accept</button>
-            <button id="decline-btn">Decline</button>
-            <button id="settings-btn">Settings</button>
+            <button id="accept-btn">Συμφωνώ</button>
+            <button id="decline-btn">Αρνούμαι</button>
+            <button id="settings-btn">Προτιμήσεις</button>
         </div>
         <div id="settings-panel" class="settings-panel">
-            <h3>Cookie Settings</h3>
+            <h3>Ρυθμίσεις προτιμήσεων</h3>
             <label class="toggle-switch">
-                <input type="checkbox" id="analytics-toggle" checked>
+                <input type="checkbox" id="essential_cookies" checked disabled>
                 <span class="slider"></span>
-                Analytics
+                Απαραίτητα Cookies
             </label>
             <label class="toggle-switch">
-                <input type="checkbox" id="marketing-toggle" checked>
+                <input type="checkbox" id="user_toggle" checked>
                 <span class="slider"></span>
-                Marketing
+                Cookies Λειτουργικότητας
             </label>
             <label class="toggle-switch">
-                <input type="checkbox" id="preferences-toggle" checked>
+                <input type="checkbox" id="tracking_toggle" checked>
                 <span class="slider"></span>
-                Preferences
+                Cookies Εντοπισμού
             </label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="marketing_toggle" checked>
+                <span class="slider"></span>
+                Cookies Εξατομικευμένου περιεχομένου και διαφημίσεων
+            </label>
+            <button id="save-settings-btn">Αποθήκευση</button>
         </div>
     </div>
 <?php
