@@ -237,7 +237,6 @@ function gcm_render_cookie_consent_banner_position_field()
 function gcm_banner()
 {
 
-    if (!current_user_can("administrator")) return;
     $showBanner = !isset($_COOKIE['gmc_user_consent']);
     $options = get_option('gcm_cookie_consent_banner_settings');
 
@@ -249,7 +248,7 @@ function gcm_banner()
         <div class="banner__inner">
             <span class="gcm_close_banner">X</span>
             <h3 style="color:<?php echo $options['banner_text_color'] ?>"><?php echo($options['title'] ?: "Αυτή η ιστοσελίδα χρησιμοποιεί cookies") ?></h3>
-            <p style="color:<?php echo $options['banner_text_color'] ?>">><?php echo($options['description'] ?: "Χρησιμοποιούμε cookies και άλλες τεχνολογίες εντοπισμού για την βελτίωση της εμπειρίας περιήγησης στην
+            <p style="color:<?php echo $options['banner_text_color'] ?>"><?php echo($options['description'] ?: "Χρησιμοποιούμε cookies και άλλες τεχνολογίες εντοπισμού για την βελτίωση της εμπειρίας περιήγησης στην
                 ιστοσελίδα μας, για την εξατομίκευση περιεχομένου και διαφημίσεων, την παροχή λειτουργιών κοινωνικών
                 μέσων και την ανάλυση της επισκεψιμότητάς μας.") ?></p>
             <div class="buttons">
