@@ -244,7 +244,7 @@ function gcm_banner()
     if (!$showBanner) return;
     ?>
 
-    <div id="gmc_cookie_banner" class="cookie-banner <?php echo strtolower($options['banner_position'][0]) ?>"
+    <div id="gmc_cookie_banner" class="cookie-banner <?php echo (strtolower($options['banner_position'][0]) ?: 'bottom') ?>"
          style="background-color:<?php echo $options['banner_background_color'] ?>">
         <div class="banner__inner">
             <span class="gcm_close_banner">X</span>
