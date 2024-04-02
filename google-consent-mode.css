@@ -1,11 +1,36 @@
 #gmc_cookie_banner {
     position: fixed;
+    width: 100%;
+    text-align: center;
+    z-index: 99999;
+}
+
+#gmc_cookie_banner.center{
+    top: 50%;
+    left: 50%;
+    max-width: 600px;
+    transform: translate(-50%,-50%);
+}
+
+#gmc_cookie_banner.top{
+    top: 0;
+    left: 0;
+}
+
+#gmc_cookie_banner.bottom{
     bottom: 0;
     left: 0;
-    width: 100%;
-    background-color: #f0f0f0;
-    padding: 10px;
-    text-align: center;
+}
+
+#gmc_cookie_banner .banner__inner{
+    padding: 15px;
+}
+
+.gcm_close_banner{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
 }
 
 #gmc_cookie_banner p {
@@ -16,8 +41,6 @@
     margin: 5px;
     padding: 5px 10px;
     border: none;
-    background-color: #007bff;
-    color: #fff;
     cursor: pointer;
 }
 

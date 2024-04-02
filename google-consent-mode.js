@@ -4,10 +4,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function gtag() { dataLayer.push(arguments); }
 
     gtag('consent', 'default', {
-        'ad_storage': 'denied',
         'ad_user_data': 'denied',
         'ad_personalization': 'denied',
-        'analytics_storage': 'denied'
+        'ad_storage': 'denied',
+        'analytics_storage': 'denied',
+        'functionality_storage': 'denied',
+        'personalization_storage': 'denied',
+        'security_storage': 'granted'
     });
 
     // Select DOM elements
@@ -17,10 +20,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const declineBtn = document.getElementById('decline-btn');
     const saveSettingsBtn = document.getElementById('save-settings-btn');
     const gmcBanner = document.getElementById('gmc_cookie_banner');
+    const closeButton = document.querySelector('.gcm_close_banner');
 
     // Event listeners
     settingsBtn.addEventListener('click', function () {
         settingsPanel.style.display = 'block';
+    });
+
+    closeButton.addEventListener('click', function(){
+        gmcBanner.style.display = 'none';
     });
 
     acceptBtn.addEventListener('click', function () {
@@ -42,29 +50,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
     saveSettingsBtn.addEventListener('click', function () {
         // Read user's individual consent preferences
-        const userConsent = document.getElementById('user_toggle').checked;
-        const trackingConsent = document.getElementById('tracking_toggle').checked;
-        const marketingConsent = document.getElementById('marketing_toggle').checked;
+        const functionalConsent = document.getElementById('gcm_functional_cookies').checked;
+        const trackingConsent = document.getElementById('gcm_tracking_toggle').checked;
+        const marketingConsent = document.getElementById('gcm_marketing_toggle').checked;
 
         // Update consent based on user's choices
-        if (userConsent) {
-            consentGranted('ad_storage', true);
-            consentGranted('ad_personalization', true);
+        if (functionalConsent) {
+            consentGranted('functionality_storage', true);
+            consentGranted('personalization_storage', true);
         } else {
-            consentGranted('ad_storage', false);
-            consentGranted('ad_personalization', false);
+            consentGranted('functionality_storage', false);
+            consentGranted('personalization_storage', false);
         }
 
         if (trackingConsent) {
-            consentGranted('ad_user_data', true);
-        } else {
-            consentGranted('ad_user_data', false);
-        }
-
-        if (marketingConsent) {
             consentGranted('analytics_storage', true);
         } else {
             consentGranted('analytics_storage', false);
+        }
+
+        if (marketingConsent) {
+            consentGranted('ad_user_data', true);
+            consentGranted('ad_personalization', true);
+            consentGranted('ad_storage', true);
+        } else {
+            consentGranted('ad_user_data', false);
+            consentGranted('ad_personalization', false);
+            consentGranted('ad_storage', false);
         }
         setCookie("gmc_user_consent", 'user_consent', 30); // Expires in 30 days
 
@@ -74,18 +86,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to grant consent for all features
     function grantAllConsents() {
-        consentGranted('ad_storage', true);
-        consentGranted('ad_personalization', true);
         consentGranted('ad_user_data', true);
+        consentGranted('ad_personalization', true);
+        consentGranted('ad_storage', true);
         consentGranted('analytics_storage', true);
+        consentGranted('functionality_storage', true);
+        consentGranted('personalization_storage', true);
+        consentGranted('security_storage', true);
     }
 
     // Function to deny consent for all features
     function denyAllConsents() {
-        consentGranted('ad_storage', false);
-        consentGranted('ad_personalization', false);
         consentGranted('ad_user_data', false);
+        consentGranted('ad_personalization', false);
+        consentGranted('ad_storage', false);
         consentGranted('analytics_storage', false);
+        consentGranted('functionality_storage', false);
+        consentGranted('personalization_storage', false);
+        consentGranted('security_storage', false);
     }
 
     // Function to update consent
