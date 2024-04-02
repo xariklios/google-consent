@@ -3,6 +3,7 @@
     width: 100%;
     text-align: center;
     z-index: 99999;
+    background-color: #f0f0f0;
 }
 
 #gmc_cookie_banner.center{
@@ -42,6 +43,8 @@
     padding: 5px 10px;
     border: none;
     cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
 }
 
 #gmc_cookie_banner .settings-panel {
