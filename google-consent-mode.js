@@ -39,14 +39,16 @@ document.addEventListener('DOMContentLoaded', function () {
         setCookie("gmc_user_consent", 'user_consent', 30); // Expires in 30 days
     });
 
-    declineBtn.addEventListener('click', function () {
-        // Deny consent for all features
-        denyAllConsents();
-        gmcBanner.style.display = 'none';
+    if (declineBtn){
+        declineBtn.addEventListener('click', function () {
+            // Deny consent for all features
+            denyAllConsents();
+            gmcBanner.style.display = 'none';
 
-        // Set cookie to indicate user declined
-        setCookie("gmc_user_consent", 'user_consent', 30); // Expires in 30 days
-    });
+            // Set cookie to indicate user declined
+            setCookie("gmc_user_consent", 'user_consent', 30); // Expires in 30 days
+        });
+    }
 
     saveSettingsBtn.addEventListener('click', function () {
         // Read user's individual consent preferences
