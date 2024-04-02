@@ -43,7 +43,7 @@ function gcm_cookie_consent_banner_settings_page()
 
 function gcm_render_cookie_consent_banner_settings_page()
 {
-    ?>
+?>
     <div class="wrap">
         <h1>Cookie Consent Banner Settings</h1>
         <form method="post" action="options.php">
@@ -52,7 +52,7 @@ function gcm_render_cookie_consent_banner_settings_page()
             <?php submit_button(); ?>
         </form>
     </div>
-    <?php
+<?php
 }
 
 function gcm_cookie_consent_banner_settings_fields()
@@ -123,6 +123,15 @@ function gcm_cookie_consent_banner_settings_fields()
         'gcm_cookie_consent_banner_show_disagree',
         'Show Decline Button',
         'gcm_render_cookie_consent_banner_show_disagree_btn',
+        'gcm_cookie_consent_banner_settings_page',
+        'gcm_cookie_consent_banner_settings_section'
+    );
+
+    // show close btn
+    add_settings_field(
+        'gcm_cookie_consent_banner_show_close',
+        'Show Close Button',
+        'gcm_render_cookie_consent_banner_show_close_btn',
         'gcm_cookie_consent_banner_settings_page',
         'gcm_cookie_consent_banner_settings_section'
     );
@@ -203,6 +212,14 @@ function gcm_render_cookie_consent_banner_btns_text_color()
     echo '<input type="color" name="gcm_cookie_consent_banner_settings[btns_text_color]" value="' . esc_attr($color) . '">';
 }
 
+function gcm_render_cookie_consent_banner_show_close_btn()
+{
+    $options = get_option('gcm_cookie_consent_banner_settings');
+    $checked = isset($options['show_close_btn']) ? $options['show_close_btn'] : false; 
+
+    echo '<input type="checkbox" name="gcm_cookie_consent_banner_settings[show_close_btn]" ' . ($checked ? 'checked' : '') . '>';
+}
+
 /**
  * @return void
  */
@@ -241,28 +258,34 @@ function gcm_banner()
     $options = get_option('gcm_cookie_consent_banner_settings');
 
     if (!$showBanner) return;
-    ?>
+?>
 
-    <div id="gmc_cookie_banner" class="cookie-banner <?php echo (strtolower($options['banner_position'][0]) ?: 'bottom') ?>"
-         style="background-color:<?php echo $options['banner_background_color'] ?>">
+    <div id="gmc_cookie_banner" class="cookie-banner <?php echo isset($options['banner_position'][0]) ? strtolower($options['banner_position'][0]) : 'bottom' ?>" 
+    style="<?php echo isset($options['banner_background_color']) ? 'background-color:' . $options['banner_background_color'] : ''?>">
         <div class="banner__inner">
-            <span class="gcm_close_banner">X</span>
-            <h3 style="color:<?php echo $options['banner_text_color'] ?>"><?php echo($options['title'] ?: "Αυτή η ιστοσελίδα χρησιμοποιεί cookies") ?></h3>
-            <p style="color:<?php echo $options['banner_text_color'] ?>"><?php echo($options['description'] ?: "Χρησιμοποιούμε cookies και άλλες τεχνολογίες εντοπισμού για την βελτίωση της εμπειρίας περιήγησης στην
+            <?php if (isset($options['show_close_btn'])) { ?>
+                <span class="gcm_close_banner">X</span>
+            <?php } ?>
+            <h3 style="<?php echo isset($options['banner_text_color']) ? 'color:' . $options['banner_text_color'] : "color:#000";?>">
+            <?php echo isset($options['title']) ? $options['title'] : "Αυτή η ιστοσελίδα χρησιμοποιεί cookies" ?></h3>
+            <p style="<?php echo isset($options['banner_text_color']) ? 'color:' . $options['banner_text_color'] : "color:#000";?>">
+            <?php echo isset($options['description']) ? $options['description'] : "Χρησιμοποιούμε cookies και άλλες τεχνολογίες εντοπισμού για την βελτίωση της εμπειρίας περιήγησης στην
                 ιστοσελίδα μας, για την εξατομίκευση περιεχομένου και διαφημίσεων, την παροχή λειτουργιών κοινωνικών
-                μέσων και την ανάλυση της επισκεψιμότητάς μας.") ?></p>
+                μέσων και την ανάλυση της επισκεψιμότητάς μας." ?>
+            </p>
+
             <div class="buttons">
-                <button id="accept-btn"
-                        style="background-color:<?php echo $options['btns_background_color'] ?>;color:<?php echo $options['btns_text_color'] ?>"><?php _e("Συμφωνώ", 'gcm_banner') ?></button>
+                <button id="accept-btn" style=" <?php echo isset($options['btns_background_color']) ? 'background-color:' . $options['btns_background_color'] : ''; ?>"
+><?php _e("Συμφωνώ", 'gcm_banner') ?></button>
                 <?php
                 if (isset($options['show_disagree_btn'])) {
-                    ?>
-                    <button id="decline-btn"
-                            style="background-color:<?php echo $options['btns_background_color'] ?>;color:<?php echo $options['btns_text_color'] ?>"><?php _e("Διαφωνώ", 'gcm_banner') ?></button> <?php
-                }
                 ?>
-                <button id="settings-btn"
-                        style="background-color:<?php echo $options['btns_background_color'] ?>;color:<?php echo $options['btns_text_color'] ?>"><?php _e("Προτιμήσεις", 'gcm_banner') ?></button>
+                    <button id="decline-btn" style=" <?php echo isset($options['btns_background_color']) ? 'background-color:' . $options['btns_background_color'] : ''; ?>"
+><?php _e("Διαφωνώ", 'gcm_banner') ?></button> <?php
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                    ?>
+                <button id="settings-btn" style=" <?php echo isset($options['btns_background_color']) ? 'background-color:' . $options['btns_background_color'] : ''; ?>"
+><?php _e("Προτιμήσεις", 'gcm_banner') ?></button>
             </div>
             <div id="settings-panel" class="settings-panel">
                 <h3><?php _e("Ρυθμίσεις προτιμήσεων", 'gcm_banner') ?></h3>
@@ -286,23 +309,23 @@ function gcm_banner()
                     <span class="slider"></span>
                     <?php _e("Cookies Εξατομικευμένου περιεχομένου και διαφημίσεων", 'gcm_banner') ?>
                 </label>
-                <button id="save-settings-btn"
-                        style="background-color:<?php echo $options['btns_background_color'] ?>;color:<?php echo $options['btns_text_color'] ?>"><?php _e("Αποθήκευση", 'gcm_banner') ?></button>
+                <button id="save-settings-btn" style=" <?php echo isset($options['btns_background_color']) ? 'background-color:' . $options['btns_background_color'] : ''; ?>"
+><?php _e("Αποθήκευση", 'gcm_banner') ?></button>
             </div>
         </div>
     </div>
-    <?php
+<?php
 }
 
 add_action('wp_head', function () {
     $options = get_option('gcm_cookie_consent_banner_settings');
 
-    ?>
+?>
 
     <style>
-        #gmc_cookie_banner input:checked + .slider {
+        #gmc_cookie_banner input:checked+.slider {
             background-color: <?php echo esc_attr($options['btns_background_color']) ?>;
         }
     </style>
-    <?php
+<?php
 });

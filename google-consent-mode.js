@@ -24,12 +24,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Event listeners
     settingsBtn.addEventListener('click', function () {
-        settingsPanel.style.display = 'block';
+        settingsPanel.classList.toggle('show')
     });
 
-    closeButton.addEventListener('click', function(){
-        gmcBanner.style.display = 'none';
-    });
+    if (closeButton){
+        closeButton.addEventListener('click', function(){
+            gmcBanner.style.display = 'none';
+        });
+    }
+   
 
     acceptBtn.addEventListener('click', function () {
         // Grant consent for all features

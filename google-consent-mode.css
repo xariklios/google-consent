@@ -52,6 +52,10 @@
     padding-top: 10px;
 }
 
+#gmc_cookie_banner .settings-panel.show {
+    display: block;
+}
+
 #gmc_cookie_banner .settings-panel h3 {
     margin-top: 0;
 }
