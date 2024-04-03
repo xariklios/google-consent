@@ -6,10 +6,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const consentCookie = getCookie("gmc_user_consent");
 
     if (consentCookie) {
-        const consentValues = JSON.parse(consentCookie);
-        Object.entries(consentValues).forEach(([feature, consent]) => {
-            consentGranted(feature, consent === 'granted');
-        });
+        const consentValues = isJsonString(consentCookie);
+
+        if (consentValues){
+            Object.entries(consentValues).forEach(([feature, consent]) => {
+                consentGranted(feature, consent === 'granted');
+            });
+        }else{
+            document.cookie = "gmc_user_consent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;SameSite=Strict";
+        }
+
     }else{
         gtag('consent', 'default', {
             'ad_user_data': 'denied',
@@ -161,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
             expires = "; expires=" + date.toUTCString();
         }
         document.cookie = name + "=" + (value || "") + expires + "; path=/;SameSite=Strict";
+
     }
 
     // Function to retrieve a cookie by name
@@ -173,5 +180,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         return null;
+    }
+
+    function isJsonString(str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
     }
 });
