@@ -5,15 +5,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const consentCookie = getCookie("gmc_user_consent");
 
+    console.log(consentCookie);
+
     if (consentCookie) {
         const consentValues = isJsonString(consentCookie);
 
         if (consentValues){
+            console.log('entered');
             Object.entries(consentValues).forEach(([feature, consent]) => {
                 consentGranted(feature, consent === 'granted');
             });
         }else{
-            document.cookie = "gmc_user_consent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;SameSite=Strict";
+            console.log('delete')
+            document.cookie = "gmc_user_consent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=None; Secure";
         }
 
     }else{
@@ -49,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
             gmcBanner.style.display = 'none';
         });
     }
-   
+
 
     if (acceptBtn){
         acceptBtn.addEventListener('click', function () {
@@ -166,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
             expires = "; expires=" + date.toUTCString();
         }
-        document.cookie = name + "=" + (value || "") + expires + "; path=/;SameSite=Strict";
+        document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=None; Secure";
 
     }
 

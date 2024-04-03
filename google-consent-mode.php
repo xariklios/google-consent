@@ -27,7 +27,7 @@ add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style('my_css');
 });
 
-add_action('wp_footer', 'gcm_banner');
+add_action('wp_footer', 'gcm_banner',99);
 add_action('admin_menu', 'gcm_cookie_consent_banner_settings_page');
 
 function gcm_cookie_consent_banner_settings_page()
@@ -43,7 +43,7 @@ function gcm_cookie_consent_banner_settings_page()
 
 function gcm_render_cookie_consent_banner_settings_page()
 {
-?>
+    ?>
     <div class="wrap">
         <h1>Cookie Consent Banner Settings</h1>
         <form method="post" action="options.php">
@@ -52,7 +52,7 @@ function gcm_render_cookie_consent_banner_settings_page()
             <?php submit_button(); ?>
         </form>
     </div>
-<?php
+    <?php
 }
 
 function gcm_cookie_consent_banner_settings_fields()
@@ -258,7 +258,7 @@ function gcm_banner()
     $options = get_option('gcm_cookie_consent_banner_settings');
 
     if (!$showBanner) return;
-?>
+    ?>
 
     <div id="gmc_cookie_banner" class="cookie-banner <?php echo isset($options['banner_position'][0]) ? strtolower($options['banner_position'][0]) : 'bottom' ?>" style="<?php echo isset($options['banner_background_color']) ? 'background-color:' . $options['banner_background_color'] : '' ?>">
         <div class="banner__inner">
@@ -270,7 +270,7 @@ function gcm_banner()
             </h3>
 
             <p style="<?php echo isset($options['banner_text_color']) ? 'color:' . $options['banner_text_color'] : "color:#000"; ?>">
-            <?php echo !empty($options['description']) ? esc_html($options['description']) : esc_html__('Χρησιμοποιούμε cookies και άλλες τεχνολογίες εντοπισμού για την βελτίωση της εμπειρίας περιήγησης στην
+                <?php echo !empty($options['description']) ? esc_html($options['description']) : esc_html__('Χρησιμοποιούμε cookies και άλλες τεχνολογίες εντοπισμού για την βελτίωση της εμπειρίας περιήγησης στην
                 ιστοσελίδα μας, για την εξατομίκευση περιεχομένου και διαφημίσεων, την παροχή λειτουργιών κοινωνικών
                 μέσων και την ανάλυση της επισκεψιμότητάς μας.', 'gmc_banner'); ?>
             </p>
@@ -279,10 +279,10 @@ function gcm_banner()
                 <button id="accept-btn" style=" <?php echo isset($options['btns_background_color']) ? 'background-color:' . $options['btns_background_color'] : ''; ?>"><?php _e("Συμφωνώ", 'gcm_banner') ?></button>
                 <?php
                 if (isset($options['show_disagree_btn'])) {
-                ?>
+                    ?>
                     <button id="decline-btn" style=" <?php echo isset($options['btns_background_color']) ? 'background-color:' . $options['btns_background_color'] : ''; ?>"><?php _e("Διαφωνώ", 'gcm_banner') ?></button> <?php
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                            ?>
+                }
+                ?>
                 <button id="settings-btn" style=" <?php echo isset($options['btns_background_color']) ? 'background-color:' . $options['btns_background_color'] : ''; ?>"><?php _e("Προτιμήσεις", 'gcm_banner') ?></button>
             </div>
             <div id="settings-panel" class="settings-panel">
@@ -311,18 +311,18 @@ function gcm_banner()
             </div>
         </div>
     </div>
-<?php
+    <?php
 }
 
 add_action('wp_head', function () {
     $options = get_option('gcm_cookie_consent_banner_settings');
 
-?>
+    ?>
 
     <style>
         #gmc_cookie_banner input:checked+.slider {
             background-color: <?php echo esc_attr($options['btns_background_color']) ?>;
         }
     </style>
-<?php
+    <?php
 });
