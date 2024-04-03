@@ -3,15 +3,24 @@ document.addEventListener('DOMContentLoaded', function () {
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
 
-    gtag('consent', 'default', {
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'ad_storage': 'denied',
-        'analytics_storage': 'denied',
-        'functionality_storage': 'denied',
-        'personalization_storage': 'denied',
-        'security_storage': 'granted'
-    });
+    const consentCookie = getCookie("gmc_user_consent");
+
+    if (consentCookie) {
+        const consentValues = JSON.parse(consentCookie);
+        Object.entries(consentValues).forEach(([feature, consent]) => {
+            consentGranted(feature, consent === 'granted');
+        });
+    }else{
+        gtag('consent', 'default', {
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+            'ad_storage': 'denied',
+            'analytics_storage': 'denied',
+            'functionality_storage': 'denied',
+            'personalization_storage': 'denied',
+            'security_storage': 'granted'
+        });
+    }
 
     // Select DOM elements
     const settingsBtn = document.getElementById('settings-btn');
@@ -42,7 +51,20 @@ document.addEventListener('DOMContentLoaded', function () {
             grantAllConsents();
             gmcBanner.style.display = 'none';
             // Set cookie to indicate user accepted
-            setCookie("gmc_user_consent", 'user_consent', 30); // Expires in 30 days
+            setCookie(
+                "gmc_user_consent",
+                JSON.stringify(
+                    {
+                        'ad_user_data': 'true',
+                        'ad_personalization': 'true',
+                        'ad_storage': 'true',
+                        'analytics_storage': 'true',
+                        'functionality_storage': 'true',
+                        'personalization_storage': 'true',
+                        'security_storage': 'granted'
+                    }),
+                30
+            ); // Expires in 30 days
         });
     }
 
@@ -54,48 +76,51 @@ document.addEventListener('DOMContentLoaded', function () {
             gmcBanner.style.display = 'none';
 
             // Set cookie to indicate user declined
-            setCookie("gmc_user_consent", 'user_consent', 30); // Expires in 30 days
+            setCookie(
+                "gmc_user_consent",
+                JSON.stringify(
+                    {
+                        'ad_user_data': 'false',
+                        'ad_personalization': 'false',
+                        'ad_storage': 'false',
+                        'analytics_storage': 'false',
+                        'functionality_storage': 'false',
+                        'personalization_storage': 'false',
+                        'security_storage': 'granted'
+                    }),
+                30
+            );
         });
     }
 
-    if (saveSettingsBtn){
+    if (saveSettingsBtn) {
         saveSettingsBtn.addEventListener('click', function () {
-            // Read user's individual consent preferences
-            const functionalConsent = document.getElementById('gcm_functional_cookies').checked;
-            const trackingConsent = document.getElementById('gcm_tracking_toggle').checked;
-            const marketingConsent = document.getElementById('gcm_marketing_toggle').checked;
+            const functionalConsent = document.getElementById('gcm_functional_cookies');
+            const trackingConsent = document.getElementById('gcm_tracking_toggle');
+            const marketingConsent = document.getElementById('gcm_marketing_toggle');
+            if (functionalConsent && trackingConsent && marketingConsent) {
+                consentGranted('functionality_storage', functionalConsent.checked);
+                consentGranted('personalization_storage', functionalConsent.checked);
+                consentGranted('analytics_storage', trackingConsent.checked);
+                consentGranted('ad_user_data', marketingConsent.checked);
+                consentGranted('ad_personalization', marketingConsent.checked);
+                consentGranted('ad_storage', marketingConsent.checked);
 
-            // Update consent based on user's choices
-            if (functionalConsent) {
-                consentGranted('functionality_storage', true);
-                consentGranted('personalization_storage', true);
-            } else {
-                consentGranted('functionality_storage', false);
-                consentGranted('personalization_storage', false);
+                setCookie("gmc_user_consent", JSON.stringify({
+                    'ad_user_data': marketingConsent.checked ? 'granted' : 'denied',
+                    'ad_personalization': marketingConsent.checked ? 'granted' : 'denied',
+                    'ad_storage': marketingConsent.checked ? 'granted' : 'denied',
+                    'analytics_storage': trackingConsent.checked ? 'granted' : 'denied',
+                    'functionality_storage': functionalConsent.checked ? 'granted' : 'denied',
+                    'personalization_storage': functionalConsent.checked ? 'granted' : 'denied',
+                    'security_storage': 'granted'
+                }), 30); // Expires in 30 days
+                if (gmcBanner) {
+                    gmcBanner.style.display = 'none';
+                }
             }
-
-            if (trackingConsent) {
-                consentGranted('analytics_storage', true);
-            } else {
-                consentGranted('analytics_storage', false);
-            }
-
-            if (marketingConsent) {
-                consentGranted('ad_user_data', true);
-                consentGranted('ad_personalization', true);
-                consentGranted('ad_storage', true);
-            } else {
-                consentGranted('ad_user_data', false);
-                consentGranted('ad_personalization', false);
-                consentGranted('ad_storage', false);
-            }
-            setCookie("gmc_user_consent", 'user_consent', 30); // Expires in 30 days
-
-            gmcBanner.style.display = 'none';
-
         });
     }
-
 
     // Function to grant consent for all features
     function grantAllConsents() {
@@ -135,6 +160,18 @@ document.addEventListener('DOMContentLoaded', function () {
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
             expires = "; expires=" + date.toUTCString();
         }
-        document.cookie = name + "=" + (value || "") + expires + "; SameSite=Strict";
+        document.cookie = name + "=" + (value || "") + expires + "; path=/;SameSite=Strict";
+    }
+
+    // Function to retrieve a cookie by name
+    function getCookie(name) {
+        const cookieArr = document.cookie.split("; "); //get all cookies
+        for (let i = 0; i < cookieArr.length; i++) {
+            const cookiePair = cookieArr[i].split("=");
+            if (name === cookiePair[0]) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+        return null;
     }
 });

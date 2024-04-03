@@ -4,7 +4,7 @@
 * Plugin Name:       Google Consent Mode V2
 * Plugin URI:        https://vforvaltzis.dev
 * Description:       Handle the basics of google consent v2 GDPR
-* Version:           1.0.0
+* Version:           1.0.1
 * Requires at least: 5.2
 * Requires PHP:      7.2
 * Author:            Charis Valtzis 
