@@ -5,18 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const consentCookie = getCookie("gmc_user_consent");
 
-    console.log(consentCookie);
-
     if (consentCookie) {
         const consentValues = isJsonString(consentCookie);
 
         if (consentValues){
-            console.log('entered');
-            Object.entries(consentValues).forEach(([feature, consent]) => {
-                consentGranted(feature, consent === 'granted');
-            });
+            gtag('consent', 'default', JSON.parse(consentCookie));
         }else{
-            console.log('delete')
             document.cookie = "gmc_user_consent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=None; Secure";
         }
 
@@ -65,12 +59,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 "gmc_user_consent",
                 JSON.stringify(
                     {
-                        'ad_user_data': 'true',
-                        'ad_personalization': 'true',
-                        'ad_storage': 'true',
-                        'analytics_storage': 'true',
-                        'functionality_storage': 'true',
-                        'personalization_storage': 'true',
+                        'ad_user_data': 'granted',
+                        'ad_personalization': 'granted',
+                        'ad_storage': 'granted',
+                        'analytics_storage': 'granted',
+                        'functionality_storage': 'granted',
+                        'personalization_storage': 'granted',
                         'security_storage': 'granted'
                     }),
                 30
@@ -90,12 +84,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 "gmc_user_consent",
                 JSON.stringify(
                     {
-                        'ad_user_data': 'false',
-                        'ad_personalization': 'false',
-                        'ad_storage': 'false',
-                        'analytics_storage': 'false',
-                        'functionality_storage': 'false',
-                        'personalization_storage': 'false',
+                        'ad_user_data': 'denied',
+                        'ad_personalization': 'denied',
+                        'ad_storage': 'denied',
+                        'analytics_storage': 'denied',
+                        'functionality_storage': 'denied',
+                        'personalization_storage': 'denied',
                         'security_storage': 'granted'
                     }),
                 30
@@ -170,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
             expires = "; expires=" + date.toUTCString();
         }
-        document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=None; Secure";
+        document.cookie = name + "=" + (value || "") + expires + ";  path=/; SameSite=None; Secure";
 
     }
 
