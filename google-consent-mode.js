@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const consentValues = isJsonString(consentCookie);
 
         if (consentValues){
-            gtag('consent', 'default', JSON.parse(consentCookie));
+            gtag('consent', 'update', JSON.parse(consentCookie));
         }else{
             document.cookie = "gmc_user_consent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=None; Secure";
         }
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
             date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
             expires = "; expires=" + date.toUTCString();
         }
-        document.cookie = name + "=" + (value || "") + expires + ";  path=/; SameSite=None; Secure";
+        document.cookie = name + "=" + (value || "") + expires + "; path=/;";
 
     }
 
